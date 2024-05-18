@@ -42,7 +42,7 @@ public class Game {
     }
 
     public Human NewHuman(JProgressBar pr1) {
-        Human human = new Human(0, 80, 160000, 1);
+        Human human = new Human(0, 80, 16, 1);
         action.HP(human, pr1);
         pr1.setMaximum(human.getMaxHealth());
         return human;

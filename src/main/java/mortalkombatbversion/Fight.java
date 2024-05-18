@@ -93,7 +93,7 @@ public class Fight {
             case "20":
                 if (Math.random() < 0.75) {
                     p2.setDebuf(new Debuf(p1.getLevel()));
-                    l2.setText(p1.getName() + " weaken " + p2.getName());
+                    l2.setText(p1.getName() + " weakened " + p2.getName());
                 }
                 break;
 
@@ -101,7 +101,7 @@ public class Fight {
             case "-12":
                 if (Math.random() < 0.75) {
                     p1.setDebuf(new Debuf(p2.getLevel()));
-                    l2.setText(p2.getName() + " weaken " + p1.getName());
+                    l2.setText(p2.getName() + " weakened " + p1.getName());
                 }
                 break;
 
@@ -201,11 +201,8 @@ public class Fight {
     // Этот метод обеспечивает корректное завершение раунда боя и обновляет данные о победе или поражении игрока.
     public void EndRound(Player human, Player enemy, JDialog dialog, JLabel label,
             CharacterAction action, Items[] items, JDialog jDialog7) {
-
+        
         endRound = true;
-
-//        dialog.setVisible(true);
-//        dialog.setBounds(300, 150, 700, 600);
         if (human.getHealth() > 0) {
             label.setText("You win");
             action.nextEnemy();

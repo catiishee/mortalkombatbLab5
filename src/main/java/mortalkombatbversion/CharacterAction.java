@@ -22,23 +22,15 @@ import javax.swing.JProgressBar;
 public class CharacterAction {
 
     private final int experience_for_next_level[] = {40, 90, 180, 260, 410, 1000};
-
     private final int kind_fight[][] = {{1, 0}, {1, 1, 0}, {0, 1, 0}, {1, 1, 1, 1}, {2}, {3}};
-
     private Player enemyes[] = new Player[6];
-
     EnemyFabric fabric = new EnemyFabric();
-
     private Player enemyy = null;
-
     private int numberOfLocations;
-
     private int numberOfEnemyesInLocation = -1;
-
     private int currentEnemy = 0;
-
     private int currentLocation;
-
+    
     public void setEnemyes(int numberOfLocations) {
         this.numberOfLocations = numberOfLocations;
         this.currentLocation = 1;
@@ -48,7 +40,6 @@ public class CharacterAction {
         enemyes[3] = fabric.create(3, 0);
         enemyes[4] = fabric.create(4, 0);
         enemyes[5] = fabric.create(4, 0);
-
     }
 
     public Player[] getEnemyes() {
@@ -67,22 +58,22 @@ public class CharacterAction {
         switch (i) {
             case 0:
                 enemyy = enemyes[0];
-                icon1 = new ImageIcon("C:\\Users\\Мария\\Desktop\\Baraka.jpg");
+                icon1 = new ImageIcon("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Танк.jpg");
                 label2.setText("Baraka (танк)");
                 break;
             case 1:
                 enemyy = enemyes[1];
-                icon1 = new ImageIcon("C:\\Users\\Мария\\Desktop\\Sub-Zero.jpg");
+                icon1 = new ImageIcon("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\маг.jpg");
                 label2.setText("Sub-Zero (маг)");
                 break;
             case 2:
                 enemyy = enemyes[2];
-                icon1 = new ImageIcon("C:\\Users\\Мария\\Desktop\\Liu Kang.jpg");
+                icon1 = new ImageIcon("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Боец.jpg");
                 label2.setText("Liu Kang (боец)");
                 break;
             case 3:
                 enemyy = enemyes[3];
-                icon1 = new ImageIcon("C:\\Users\\Мария\\Desktop\\Sonya Blade.jpg");
+                icon1 = new ImageIcon("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Солдат.jpg");
                 label2.setText("Sonya Blade (солдат)");
                 break;
         }
@@ -93,8 +84,7 @@ public class CharacterAction {
     }
 
     private Player ChooseBoss(JLabel label, JLabel label2, JLabel text, JLabel label3, int level) {
-        ImageIcon icon1 = null;
-        icon1 = new ImageIcon("C:\\Users\\Мария\\Desktop\\Shao Kahn.png");
+        ImageIcon icon1 = new ImageIcon("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Босс.jpg");
         label2.setText("Shao Kahn (босс)");
         enemyy = enemyes[4];
         label.setIcon(icon1);
@@ -148,7 +138,6 @@ public class CharacterAction {
     }
 
     public void HP(Player player, JProgressBar progress) {
-
         if (player.getHealth() >= 0) {
             progress.setValue(player.getHealth());
         } else {
@@ -341,4 +330,5 @@ public class CharacterAction {
     public void nextEnemy(){
         currentEnemy ++;
     }
+    
 }

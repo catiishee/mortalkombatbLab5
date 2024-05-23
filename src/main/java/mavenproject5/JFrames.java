@@ -7,6 +7,7 @@ package mavenproject5;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import mortalkombatbversion.Game;
 import mortalkombatbversion.Human;
 import mortalkombatbversion.Items;
@@ -133,8 +134,6 @@ public class JFrames extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setMinimumSize(new java.awt.Dimension(1000, 600));
         jPanel2.setName(""); // NOI18N
-
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Основное\\java meow\\5 ЛАПКА ПАПКА\\Kitana.jpg")); // NOI18N
 
         jButton3.setBackground(new java.awt.Color(255, 0, 0));
         jButton3.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
@@ -920,7 +919,7 @@ public class JFrames extends javax.swing.JFrame {
         jDialog7.getContentPane().setLayout(jDialog7Layout);
         jDialog7Layout.setHorizontalGroup(
             jDialog7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 409, Short.MAX_VALUE)
+            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
         );
         jDialog7Layout.setVerticalGroup(
             jDialog7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1077,10 +1076,8 @@ public class JFrames extends javax.swing.JFrame {
         if (game.fight.isEndRound()) {
             return;
         }
-        game.fight.Hit(human, enemy, 1, jLabel13, jLabel12, jDialog1,
-                jLabel18, game.action, jProgressBar1, jProgressBar2, jDialog2,
-                jDialog4, jFrame1, game.getResults(), jLabel20, jLabel24,
-                jLabel26, jLabel29, jLabel27, items, jRadioButton3, jDialog7);
+        GuiUpdate guiUpdate = game.fight.Hit(human, enemy, 1, game.action, items, game.getResults());
+        updateGui(guiUpdate);
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -1088,21 +1085,17 @@ public class JFrames extends javax.swing.JFrame {
         if (game.fight.isEndRound()) {
             return;
         }
-        game.fight.Hit(human, enemy, 0, jLabel13, jLabel12, jDialog1,
-                jLabel18, game.action, jProgressBar1, jProgressBar2, jDialog2,
-                jDialog4, jFrame1, game.getResults(), jLabel20, jLabel24,
-                jLabel26, jLabel29, jLabel27, items, jRadioButton3, jDialog7);
+        GuiUpdate guiUpdate = game.fight.Hit(human, enemy, 0, game.action, items, game.getResults());
+        updateGui(guiUpdate);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         game.fight.setEndRound(false);
+        GuiUpdate guiUpdate = new GuiUpdate();
+        enemy = game.fight.NewRound(human, game.action, guiUpdate);
 
-        enemy = game.fight.NewRound(human, jLabel4, jProgressBar1, jProgressBar2,
-                jLabel5, jLabel10, jLabel13, game.action);
-
-        game.change.NewRoundTexts(human, enemy, jProgressBar1, jProgressBar2,
-                jLabel17, jLabel16, jLabel6, jLabel19, jLabel12, jLabel13, jLabel9,
-                jLabel26, jLabel27, game.fight.i, items, jRadioButton1, jRadioButton2, jRadioButton3);
+        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
+        updateGui(guiUpdate);
 
         jDialog1.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -1149,10 +1142,12 @@ public class JFrames extends javax.swing.JFrame {
         if (jRadioButton3.isSelected()) {
             nameButton = "jRadioButton3";
         }
-        game.action.UseItem(human, items, nameButton, jDialog6, jDialog5);
-        game.action.HP(human, jProgressBar1);
+        GuiUpdate guiUpdate = new GuiUpdate();
+        game.action.UseItem(human, items, nameButton, guiUpdate);
+        guiUpdate.setPr1Value(human.getHealth());
         jLabel12.setText(human.getHealth() + "/" + human.getMaxHealth());
-        game.change.BagText(items, jRadioButton1, jRadioButton2, jRadioButton3);
+        game.change.BagText(items, guiUpdate);
+        updateGui(guiUpdate);
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -1168,22 +1163,19 @@ public class JFrames extends javax.swing.JFrame {
         if (game.fight.isEndRound()) {
             return;
         }
-        game.fight.Hit(human, enemy, 2, jLabel13, jLabel12, jDialog1,
-                jLabel18, game.action, jProgressBar1, jProgressBar2, jDialog2,
-                jDialog4, jFrame1, game.getResults(), jLabel20, jLabel24,
-                jLabel26, jLabel29, jLabel27, items, jRadioButton3, jDialog7);
+        GuiUpdate guiUpdate = game.fight.Hit(human, enemy, 2, game.action, items, game.getResults());
+        updateGui(guiUpdate);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         game.fight.setEndRound(false);
         human.setMaxHealth((int) (Math.random() * 10 + 5));
         jDialog7.dispose();
-        enemy = game.fight.NewRound(human, jLabel4, jProgressBar1, jProgressBar2,
-                jLabel5, jLabel10, jLabel13, game.action);
+        GuiUpdate guiUpdate = new GuiUpdate();
+        enemy = game.fight.NewRound(human, game.action, guiUpdate);
 
-        game.change.NewRoundTexts(human, enemy, jProgressBar1, jProgressBar2,
-                jLabel17, jLabel16, jLabel6, jLabel19, jLabel12, jLabel13, jLabel9,
-                jLabel26, jLabel27, game.fight.i, items, jRadioButton1, jRadioButton2, jRadioButton3);
+        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
+        updateGui(guiUpdate);
 
     }//GEN-LAST:event_jButton14ActionPerformed
 
@@ -1191,34 +1183,155 @@ public class JFrames extends javax.swing.JFrame {
         game.fight.setEndRound(false);
         human.setDamage((int) (Math.random() * 5 + 5));
         jDialog7.dispose();
-        enemy = game.fight.NewRound(human, jLabel4, jProgressBar1, jProgressBar2,
-                jLabel5, jLabel10, jLabel13, game.action);
+        GuiUpdate guiUpdate = new GuiUpdate();
+        enemy = game.fight.NewRound(human, game.action, guiUpdate);
 
-        game.change.NewRoundTexts(human, enemy, jProgressBar1, jProgressBar2,
-                jLabel17, jLabel16, jLabel6, jLabel19, jLabel12, jLabel13, jLabel9,
-                jLabel26, jLabel27, game.fight.i, items, jRadioButton1, jRadioButton2, jRadioButton3);
+        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
+        updateGui(guiUpdate);
 
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
         int locations = Integer.parseInt(jTextField2.getText());
-        if(locations <= 0){
+        if (locations <= 0) {
             return;
         }
-        
+
         jFrame1.setVisible(rootPaneCheckingEnabled);
         jFrame1.setSize(1000, 700);
+        GuiUpdate guiUpdate = new GuiUpdate();
+        human = game.NewHuman(guiUpdate);
 
-        human = game.NewHuman(jProgressBar1);
+        enemy = game.NewEnemy(locations, guiUpdate);
 
-        enemy = game.NewEnemy(jLabel4, jLabel5, jLabel10, jLabel13, jProgressBar2, locations);
-
-        game.change.NewRoundTexts(human, enemy, jProgressBar1, jProgressBar2,
-                jLabel17, jLabel16, jLabel6, jLabel19, jLabel12, jLabel13, jLabel9,
-                jLabel26, jLabel27, game.fight.i, items, jRadioButton1, jRadioButton2, jRadioButton3);
-        jDialog8.dispose();
-        
+        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
+        updateGui(guiUpdate);
     }//GEN-LAST:event_jButton15ActionPerformed
+
+    private void updateGui(GuiUpdate update) {
+        if (update.getLabel18Text() != null) {
+            jLabel18.setText(update.getLabel18Text());
+        }
+        if (update.getLabel2Text() != null) {
+            jLabel2.setText(update.getLabel2Text());
+        }
+        if (update.getDialogMessage() != null) {
+            jDialog1.setTitle(update.getDialogMessage());
+        }
+        if (update.getLabel3Text() != null) {
+            jLabel3.setText(update.getLabel3Text());
+        }
+        if (update.getLabel4Text() != null) {
+            jLabel4.setText(update.getLabel4Text());
+        }
+        if (update.getLabel5Text() != null) {
+            jLabel5.setText(update.getLabel5Text());
+        }
+        if (update.getLabel6Text() != null) {
+            jLabel6.setText(update.getLabel6Text());
+        }
+        if (update.getLabel26Text() != null) {
+            jLabel26.setText(update.getLabel26Text());
+        }
+        if (update.getFightEventOutput() != null) {
+            jLabel27.setText(update.getFightEventOutput());
+        }
+        if (update.getLabel29Text() != null) {
+            jLabel29.setText(update.getLabel29Text());
+        }
+        if (update.getLabel9Text() != null) {
+            jLabel9.setText(update.getLabel9Text());
+        }
+        if (update.getLabel10Text() != null) {
+            jLabel10.setText(update.getLabel10Text());
+        }
+        if (update.getLabel12Text() != null) {
+            jLabel12.setText(update.getLabel12Text());
+        }
+        if (update.getLabel13Text() != null) {
+            jLabel13.setText(update.getLabel13Text());
+        }
+        if (update.getLabel16Text() != null) {
+            jLabel16.setText(update.getLabel16Text());
+        }
+        if (update.getLabel17Text() != null) {
+            jLabel17.setText(update.getLabel17Text());
+        }
+        if (update.getLabel19Text() != null) {
+            jLabel19.setText(update.getLabel19Text());
+        }
+        if (update.getLabel24Text() != null) {
+            jLabel24.setText(update.getLabel24Text());
+        }
+        if (update.getRb1() != null) {
+            jRadioButton1.setText(update.getRb1());
+        }
+        if (update.getRb2() != null) {
+            jRadioButton2.setText(update.getRb2());
+        }
+        if (update.getRb3() != null) {
+            jRadioButton3.setText(update.getRb3());
+        }
+
+        if (update.getPr1Value() != null) {
+            jProgressBar1.setValue(update.getPr1Value());
+        } 
+
+        if (update.getPr2Value() != null) {
+            jProgressBar2.setValue(update.getPr2Value());
+        } 
+
+        jDialog1.setVisible(update.isShowDialog());
+
+        jDialog2.setVisible(update.isShowDialog1());
+
+        jDialog3.setVisible(update.isShowDialog2());
+
+        jDialog7.setVisible(update.isShowDialog7());
+
+        if (update.isDisposeDialog1()) {
+            jDialog1.dispose();
+        }
+
+        if (update.isDisposeFrame()) {
+            jFrame1.dispose();
+        }
+
+        if (update.getDialogBounds() != null) {
+            jDialog1.setBounds(update.getDialogBounds());
+        }
+        if (update.getDialog1Bounds() != null) {
+            jDialog2.setBounds(update.getDialog1Bounds());
+        }
+        if (update.getDialog2Bounds() != null) {
+            jDialog3.setBounds(update.getDialog2Bounds());
+        }
+
+        if (update.getDamageLabel() != null) {
+            jLabel10.setText(update.getDamageLabel());
+        }
+
+        if (update.getIconPath() != null) {
+            jLabel4.setIcon(new ImageIcon(update.getIconPath()));
+        }
+
+        if (update.getHumanMaxHealth() != null) {
+            jProgressBar1.setMaximum(update.getHumanMaxHealth());
+        } 
+
+        if (update.getEnemyMaxHealth() != null) {
+            jProgressBar2.setMaximum(update.getEnemyMaxHealth());
+        } 
+
+        if (update.getHumanHealth() != null) {
+            jProgressBar1.setValue(update.getHumanHealth());
+        } 
+
+        if (update.getEnemyHealth() != null) {
+            jProgressBar2.setValue(update.getEnemyHealth());
+        } 
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

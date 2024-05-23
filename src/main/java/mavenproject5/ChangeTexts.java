@@ -4,9 +4,6 @@
  */
 package mavenproject5;
 
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
 import mortalkombatbversion.Human;
 import mortalkombatbversion.Items;
 import mortalkombatbversion.Player;
@@ -17,48 +14,48 @@ import mortalkombatbversion.Player;
  */
 public class ChangeTexts {
 
-    public void NewRoundTexts(Player human, Player enemy, JProgressBar pr1,
-            JProgressBar pr2, JLabel label, JLabel label2, JLabel label3,
-            JLabel label4, JLabel label5, JLabel label6, JLabel label7, JLabel label8, JLabel label9,
-            int i, Items[] items, JRadioButton rb1, JRadioButton rb2, JRadioButton rb3) {
-        label.setText(Integer.toString(((Human) human).getPoints()));
-        label2.setText(Integer.toString(((Human) human).getExperience()) + "/" + ((Human) human).getNextExperience());
-        label3.setText(Integer.toString(human.getLevel()) + " level");
-        label4.setText(Integer.toString(enemy.getLevel()) + " level");
-        label5.setText(Integer.toString(human.getMaxHealth()) + "/" + Integer.toString(human.getMaxHealth()));
-        label6.setText(Integer.toString(enemy.getMaxHealth()) + "/" + Integer.toString(enemy.getMaxHealth()));
-        label7.setText(Integer.toString(human.getDamage()));
+    public void NewRoundTexts(Player human, Player enemy, GuiUpdate guiUpdate, Items[] items, int i) {
+        guiUpdate.setLabel17Text(Integer.toString(((Human) human).getPoints()));
+        guiUpdate.setLabel16Text(Integer.toString(((Human) human).getExperience()) + "/" + ((Human) human).getNextExperience());
+        guiUpdate.setLabel6Text(Integer.toString(human.getLevel()) + " level");
+        guiUpdate.setLabel19Text(Integer.toString(enemy.getLevel()) + " level");
+        guiUpdate.setLabel12Text(Integer.toString(human.getMaxHealth()) + "/" + Integer.toString(human.getMaxHealth()));
+        guiUpdate.setLabel13Text(Integer.toString(enemy.getMaxHealth()) + "/" + Integer.toString(enemy.getMaxHealth()));
+        guiUpdate.setLabel9Text(Integer.toString(human.getDamage()));
         if (i % 2 == 1) {
-            label8.setText("Your turn");
+            guiUpdate.setLabel29Text("Your turn");
         } else {
-            label8.setText(enemy.getName() + "'s turn");
+            guiUpdate.setLabel29Text(enemy.getName() + "'s turn");
         }
-        BagText(items, rb1, rb2, rb3);
-        label9.setText("");
+        BagText(items, guiUpdate);
+        guiUpdate.setFightEventOutput("");
+        guiUpdate.setEnemyMaxHealth(enemy.getMaxHealth());
+        guiUpdate.setHumanMaxHealth(human.getMaxHealth());
+        guiUpdate.setEnemyHealth(enemy.getMaxHealth());
+        guiUpdate.setHumanHealth(human.getMaxHealth());
     }
 
-    public void RoundTexts(Player human, Player enemy, JLabel label, JLabel label2, int i, JLabel label3) {
+    public void RoundTexts(Player human, Player enemy, GuiUpdate guiUpdate, int i) {
         if (enemy.getHealth() >= 0) {
-            label.setText(Integer.toString(enemy.getHealth()) + "/" + Integer.toString(enemy.getMaxHealth()));
+            guiUpdate.setLabel13Text(Integer.toString(enemy.getHealth()) + "/" + Integer.toString(enemy.getMaxHealth()));
         } else {
-            label.setText("0/" + Integer.toString(enemy.getMaxHealth()));
+            guiUpdate.setLabel13Text("0/" + Integer.toString(enemy.getMaxHealth()));
         }
         if (human.getHealth() >= 0) {
-            label2.setText(Integer.toString(human.getHealth()) + "/" + Integer.toString(human.getMaxHealth()));
+            guiUpdate.setLabel12Text(Integer.toString(human.getHealth()) + "/" + Integer.toString(human.getMaxHealth()));
         } else {
-            label2.setText("0/" + Integer.toString(human.getMaxHealth()));
+            guiUpdate.setLabel12Text("0/" + Integer.toString(human.getMaxHealth()));
         }
         if (i % 2 == 1) {
-            label3.setText("Your turn");
+            guiUpdate.setLabel29Text("Your turn");
         } else {
-            label3.setText(enemy.getName() + "'s turn");
+            guiUpdate.setLabel29Text(enemy.getName() + "'s turn");
         }
     }
 
-    public void BagText(Items[] items, JRadioButton rb1, JRadioButton rb2, JRadioButton rb3) {
-        rb1.setText(items[0].getName() + ", " + items[0].getCount() + " шт");
-        rb2.setText(items[1].getName() + ", " + items[1].getCount() + " шт");
-        rb3.setText(items[2].getName() + ", " + items[2].getCount() + " шт");
+    public void BagText(Items[] items, GuiUpdate guiUpdate) {
+        guiUpdate.setRb1(items[0].getName() + ", " + items[0].getCount() + " шт");
+        guiUpdate.setRb2(items[1].getName() + ", " + items[1].getCount() + " шт");
+        guiUpdate.setRb3(items[2].getName() + ", " + items[2].getCount() + " шт");
     }
-
 }

@@ -208,11 +208,6 @@
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel2">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="C:\&#x41e;&#x441;&#x43d;&#x43e;&#x432;&#x43d;&#x43e;&#x435;\java meow\5 &#x41b;&#x410;&#x41f;&#x41a;&#x410; &#x41f;&#x410;&#x41f;&#x41a;&#x410;\Kitana.jpg"/>
-                </Property>
-              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton3">
               <Properties>

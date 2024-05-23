@@ -12,11 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import mavenproject5.GuiUpdate;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -33,18 +32,18 @@ public class Game {
     public Fight fight = new Fight();
     private ArrayList<Result> results = new ArrayList<>();
 
-    public Player NewEnemy(JLabel L1, JLabel L2, JLabel L3, JLabel L4, JProgressBar pr2, int numberOfLocations) {
+    public Player NewEnemy( int numberOfLocations, GuiUpdate guiUpdate) {
         action.setEnemyes(numberOfLocations);
-        Player enemy = action.ChooseEnemy(L1, L2, L3, L4,0);
-        action.HP(enemy, pr2);
-        pr2.setMaximum(enemy.getMaxHealth());
+        Player enemy = action.ChooseEnemy(0, guiUpdate);
+        guiUpdate.setEnemyMaxHealth(enemy.getMaxHealth());
+        guiUpdate.setPr2Value(enemy.getHealth());
         return enemy;
     }
 
-    public Human NewHuman(JProgressBar pr1) {
-        Human human = new Human(0, 80, 16, 1);
-        action.HP(human, pr1);
-        pr1.setMaximum(human.getMaxHealth());
+    public Human NewHuman(GuiUpdate guiUpdate) {
+        Human human = new Human(0, 80, 160, 1);
+        guiUpdate.setHumanMaxHealth(human.getMaxHealth());
+        guiUpdate.setPr1Value(human.getHealth());
         return human;
     }
 

@@ -4,21 +4,23 @@
  */
 package enemies;
 
-import mortalkombatbversion.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
-public class Baraka extends Player {
+public class Baraka extends Enemy {
 
     public Baraka(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack);
-    }
-
-    @Override
-    public String getName() {
-        return "Baraka";
+        super(level, health, damage, attack, "Baraka", "src/main/resources/Боец.jpg");
+        List<EnemyBehavior> enemyBehavior = new ArrayList<>();
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 15));
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 15));
+        enemyBehavior.add(new EnemyBehavior(new int[]{0, 1, 0}, 60));
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 1, 1}, 10));
+        setEnemyBehaviors(enemyBehavior);
     }
 
 }

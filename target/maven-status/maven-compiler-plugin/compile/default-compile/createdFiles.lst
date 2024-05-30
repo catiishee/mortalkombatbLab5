@@ -1,6 +1,6 @@
-mavenproject5\GuiUpdate.class
 enemies\Baraka.class
 mortalkombatbversion\Fight.class
+mavenproject5\Mediator.class
 actions\EventAttackWeaken.class
 actions\EventAttackAttack.class
 mavenproject5\JFrames$16.class
@@ -8,13 +8,13 @@ actions\FightEvent.class
 mavenproject5\JFrames$8.class
 actions\EventStunDefence.class
 actions\EventAttackHeal.class
+mortalkombatbversion\Fighter.class
 enemies\enemiesFabrics\EnemyFabric.class
 actions\EventDefenceWeaken.class
 mavenproject5\JFrames$1.class
 mavenproject5\JFrames$19.class
 mavenproject5\JFrames$2.class
 mortalkombatbversion\CharacterAction.class
-mortalkombatbversion\Human.class
 enemies\enemiesFabrics\SonyaBladeFabric.class
 mavenproject5\JFrames$9.class
 enemies\ShaoKahn.class
@@ -28,11 +28,11 @@ mavenproject5\Mavenproject5.class
 actions\EventHealAttack.class
 mavenproject5\JFrames$15.class
 mavenproject5\JFrames$18.class
-mavenproject5\ChangeTexts.class
 actions\EventStunAttack.class
 enemies\SubZero.class
 mavenproject5\JFrames.class
 enemies\LiuKang.class
+enemies\EnemyBehavior.class
 mavenproject5\JFrames$11.class
 actions\EventHealDefence.class
 mortalkombatbversion\Debuf.class
@@ -57,3 +57,4 @@ enemies\enemiesFabrics\ShaoKahnFabric.class
 enemies\SonyaBlade.class
 mavenproject5\JFrames$10.class
 mortalkombatbversion\Game.class
+enemies\Enemy.class

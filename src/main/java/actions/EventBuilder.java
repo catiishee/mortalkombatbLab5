@@ -4,15 +4,28 @@
  */
 package actions;
 
-import mortalkombatbversion.Player;
+import mortalkombatbversion.Fighter;
 
 /**
- *
- * @author user
+ * Класс EventBuilder отвечает за создание объектов, реализующих интерфейс FightEvent,
+ * в зависимости от комбинации атак и защит игроков.
+ * 
+ * @autor Kate Shcherbinina
+ * @since 1.0
  */
 public class EventBuilder {
-
-    public FightEvent build(Player player1, Player player2, boolean stun) {
+    
+    /**
+     * Метод build создает объект, реализующий интерфейс FightEvent,
+     * в зависимости от комбинации атак и защит игроков.
+     *
+     * @param player1 первый игрок (или атакующий)
+     * @param player2 второй игрок (или защищающийся)
+     * @param stun флаг, указывающий на оглушение первого игрока
+     * @return объект, реализующий интерфейс FightEvent
+     * @throws IllegalArgumentException если комбинация действий игроков недопустима
+     */
+    public FightEvent build(Fighter player1, Fighter player2, boolean stun) {
         if (stun) {
             player1.setAttack(-1);
 

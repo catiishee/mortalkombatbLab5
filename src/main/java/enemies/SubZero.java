@@ -4,20 +4,22 @@
  */
 package enemies;
 
-import mortalkombatbversion.Player;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
-public class SubZero extends Player {
+public class SubZero extends Enemy {
 
     public SubZero(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack);
-    }
-
-    @Override
-    public String getName() {
-        return "Sub-Zero";
+        super(level, health, damage, attack, "Sub-Zero", "src/main/resources/Солдат.jpg");
+        List<EnemyBehavior> enemyBehavior = new ArrayList<>();
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 20));
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 20));
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 1 , 1}, 50));
+        enemyBehavior.add(new EnemyBehavior(new int[]{2}, 10));
+        setEnemyBehaviors(enemyBehavior);
     }
 }

@@ -4,40 +4,70 @@
  */
 package mortalkombatbversion;
 
-import mavenproject5.GuiUpdate;
 import actions.EventBuilder;
 import actions.FightEvent;
-import mavenproject5.ChangeTexts;
+import enemies.Enemy;
 import enemies.ShaoKahn;
-import enemies.enemiesFabrics.EnemyFabric;
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import mavenproject5.Mediator;
 
 /**
+ * Класс Fight отвечает за проведение боевых действий между игроком и противниками.
+ * Он управляет ходами, вычисляет результаты атак и обороны, а также завершает раунды.
  *
- * @author
+ * @author Kate Shcherbinina
+ * @since 1.0
  */
 public class Fight {
-
-    ChangeTexts change = new ChangeTexts();
-    int kind_attack[] = {0};
-    int experiences[] = {40, 90, 180, 260, 410};
-    EnemyFabric fabric = new EnemyFabric();
+    
+    // Индекс текущего хода
     public int i = 1;
-    int k = -1;
+    
+    // Переменная оглушения
     int stun = 0;
-    double v = 0.0;
+    
+    // Флаг, указывающий на завершение раунда
     boolean endRound = false;
-
+    
+    // Объект Mediator для связи между компонентами интерфейса пользователя
+    Mediator mediator;
+    
+    /**
+     * Конструктор класса Fight.
+     * Инициализирует объект и задает медиатор.
+     *
+     * @param mediator объект класса Mediator
+     */
+    public Fight(Mediator mediator) {
+        this.mediator = mediator;
+    }
+    
+    /**
+     * Проверяет, завершен ли раунд.
+     *
+     * @return true, если раунд завершен, иначе false
+     */
     public boolean isEndRound() {
         return endRound;
     }
-
+    
+    /**
+     * Устанавливает флаг завершения раунда.
+     *
+     * @param endRound значение флага завершения раунда
+     */
     public void setEndRound(boolean endRound) {
         this.endRound = endRound;
     }
-
-    public String Move(Player p1, Player p2) {
+    
+    /**
+     * Выполняет ход игрока, вычисляет результат взаимодействия с противником.
+     *
+     * @param p1 игрок
+     * @param p2 противник
+     * @return строка с результатом взаимодействия
+     */
+    public String movePlayer(Fighter p1, Fighter p2) {
 
         EventBuilder eventBuilder = new EventBuilder();
         FightEvent fightEvent = eventBuilder.build(p1, p2, stun == 1);
@@ -46,93 +76,94 @@ public class Fight {
         p2.nextTurn();
         return output;
     }
-
-    public GuiUpdate Hit(Player human, Player enemy, int a, CharacterAction action, Items[] items, ArrayList<Result> results) {
-        GuiUpdate guiUpdate = new GuiUpdate();
+    
+    /**
+     * Обрабатывает атаку игрока, вычисляет результат боя и обновляет интерфейс.
+     *
+     * @param human игрок
+     * @param enemy противник
+     * @param a     тип атаки
+     * @param action объект CharacterAction
+     * @param items массив предметов
+     * @param results список результатов
+     */
+    public void hitPlayer(Player human, Enemy enemy, int a, CharacterAction action, Items[] items, ArrayList<Result> results) {
 
         human.setAttack(a);
-
-        if (k < kind_attack.length - 1) {
-            k++;
-        } else {
-            kind_attack = action.ChooseBehavior(enemy);
-            k = 0;
-        }
-
-        enemy.setAttack(kind_attack[k]);
+        enemy.setNextAttack();
 
         String output;
+        String turnText;
         if (i % 2 == 1) {
-            output = Move(human, enemy);
+            output = movePlayer(human, enemy);
+            turnText = enemy.getName() + "'s turn";
         } else {
-            output = Move(enemy, human);
+            output = movePlayer(enemy, human);
+            turnText = "Your turn";
         }
-        guiUpdate.setFightEventOutput(output);
 
         i++;
-
-        ChangeTexts change = new ChangeTexts();
-        change.RoundTexts(human, enemy, guiUpdate, i);
-
-        guiUpdate.setPr1Value(human.getHealth());
-        guiUpdate.setPr2Value(enemy.getHealth());
-
+        
         if (human.getHealth() <= 0 && items[2].getCount() > 0) {
             human.setNewHealth((int) (human.getMaxHealth() * 0.05));
             items[2].setCount(items[2].getCount() - 1);
-            guiUpdate.setPr1Value(human.getHealth());
-            guiUpdate.setLabel12Text(human.getHealth() + "/" + human.getMaxHealth());
-            guiUpdate.setLabel26Text("Вы воскресли");
+            mediator.updateRespawnText("Вы воскресли");
         }
 
         if (human.getHealth() <= 0 || enemy.getHealth() <= 0) {
             if (action.isFinalRound()) {
-                GuiUpdate finalRoundGuiUpdate = EndFinalRound((Human) human, action, results);
-                guiUpdate.merge(finalRoundGuiUpdate); // Assuming merge method merges fields from another GuiUpdate
+                endFinalRound(human, action, results);
             } else {
-                GuiUpdate roundGuiUpdate = EndRound(human, enemy, action, items);
-                guiUpdate.merge(roundGuiUpdate); // Assuming merge method merges fields from another GuiUpdate
+                endRound(human, enemy, action, items);
             }
         }
+        
+        mediator.updatePlayer(human);
+        mediator.updateEnemy(enemy);
+        mediator.updateFightEvent(output,turnText);
 
-        return guiUpdate;
     }
-
-    public GuiUpdate EndRound(Player human, Player enemy, CharacterAction action, Items[] items) {
-        GuiUpdate guiUpdate = new GuiUpdate();
+    
+    /**
+     * Завершает текущий раунд, обновляет состояние игрока и врага.
+     *
+     * @param human игрок
+     * @param enemy противник
+     * @param action объект CharacterAction
+     * @param items массив предметов
+     */
+    public void endRound(Player human, Enemy enemy, CharacterAction action, Items[] items) {
         endRound = true;
 
         if (human.getHealth() > 0) {
-            guiUpdate.setLabel18Text("You win");
             action.nextEnemy();
+            action.addItems(enemy, items);
 
             if (enemy instanceof ShaoKahn) {
-                action.AddItems(38, 23, 8, items);
-                action.AddPointsBoss(((Human) human), guiUpdate);
+                action.addPointsBoss(human);
             } else {
-                action.AddItems(25, 15, 5, items);
-                action.AddPoints(((Human) human), guiUpdate);
+                action.addPoints(human);
             }
         } else {
-            guiUpdate.setLabel18Text(enemy.getName() + " win");
-            guiUpdate.setShowDialog(true);
-            guiUpdate.setDialogBounds(new Rectangle(300, 150, 700, 600));
+            mediator.showEndRound(enemy.getName() + " win");
         }
-
+        
         i = 1;
-        k = -1;
-        kind_attack = ResetAttack();
-
-        return guiUpdate;
+        enemy.ResetAttack();
     }
+    
+    /**
+     * Завершает финальный раунд, обновляет результаты и отображает их.
+     *
+     * @param human игрок
+     * @param action объект CharacterAction
+     * @param results список результатов
+     */
+    public void endFinalRound(Player human, CharacterAction action, ArrayList<Result> results) {
+        boolean win = human.getHealth() > 0;
 
-    public GuiUpdate EndFinalRound(Human human, CharacterAction action, ArrayList<Result> results) {
-        GuiUpdate guiUpdate = new GuiUpdate();
-        String text = "Победа не на вашей стороне";
-
-        if (human.getHealth() > 0) {
-            action.AddPoints(human, guiUpdate);
-            text = "Победа на вашей стороне";
+        if (win) {
+            action.addPoints(human);
         }
 
         boolean top = false;
@@ -150,35 +181,24 @@ public class Fight {
             }
         }
 
-        if (top) {
-            guiUpdate.setShowDialog1(true);
-            guiUpdate.setDialog1Bounds(new Rectangle(150, 150, 600, 500));
-            guiUpdate.setLabel24Text(text);
-        } else {
-            guiUpdate.setShowDialog2(true);
-            guiUpdate.setDialog2Bounds(new Rectangle(150, 150, 470, 360));
-            guiUpdate.setLabel24Text(text);
-        }
-
-        guiUpdate.setDisposeFrame(true);
-        return guiUpdate;
+        mediator.showEndFinalRound(top, win);
     }
-
-    public int[] ResetAttack() {
-        int a[] = {0};
-        return a;
-    }
-
-    public Player NewRound(Player human, CharacterAction action, GuiUpdate guiUpdate) {
-        Player enemy1 = action.ChooseEnemy(human.getLevel(), guiUpdate);
-        guiUpdate.setHumanMaxHealth(human.getMaxHealth());
-        guiUpdate.setEnemyMaxHealth(enemy1.getMaxHealth());
-
+    
+    /**
+     * Начинает новый раунд, выбирает нового врага и обновляет интерфейс.
+     *
+     * @param human игрок
+     * @param action объект CharacterAction
+     * @return объект врага
+     */
+    public Enemy newRound(Player human, CharacterAction action) {
+        Enemy enemy = action.chooseEnemy(human.getLevel());
         human.setNewHealth(human.getMaxHealth());
-        enemy1.setNewHealth(enemy1.getMaxHealth());
-        guiUpdate.setPr1Value(human.getHealth());
-        guiUpdate.setPr2Value(enemy1.getHealth());
-        return enemy1;
+        enemy.setNewHealth(enemy.getMaxHealth());
+        mediator.updateEnemy(enemy);
+        mediator.updatePlayer(human);
+        mediator.updateFightEvent("","Your turn" );
+        return enemy;
     }
 
 }

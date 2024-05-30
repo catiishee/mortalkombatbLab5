@@ -4,35 +4,40 @@
  */
 package mavenproject5;
 
+import enemies.Enemy;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import mortalkombatbversion.Game;
-import mortalkombatbversion.Human;
-import mortalkombatbversion.Items;
 import mortalkombatbversion.Player;
+import mortalkombatbversion.Items;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
 public class JFrames extends javax.swing.JFrame {
 
-    Game game = new Game();
-    Human human = null;
-    Player enemy = null;
+    Game game;
+    Player human = null;
+    Enemy enemy = null;
     Items[] items = new Items[3];
-    String nameButton = "";
+    Mediator mediator;
 
     public JFrames() {
         initComponents();
+        this.mediator = new Mediator( jDialog1,  jDialog2,  jDialog4,  jDialog5,  jDialog6,  jDialog7, 
+             jFrame1,  jLabel2,  jLabel4,  jLabel5,  jLabel6,  jLabel9,  jLabel10, 
+             jLabel12,  jLabel13,  jLabel16,  jLabel17,  jLabel18,  jLabel24,  jLabel26, 
+             jLabel27,  jLabel28,  jLabel29,  jProgressBar1,  jProgressBar2,  jRadioButton1,
+             jRadioButton2,  jRadioButton3, jLabel19);
+        this.game = new Game(mediator);
         try {
-            game.ReadFromExcel();
+            game.readFromExcel();
         } catch (IOException ex) {
             Logger.getLogger(JFrames.class.getName()).log(Level.SEVERE, null, ex);
         }
-        game.WriteToTable(jTable1);
+        game.writeToTable(jTable1);
 
         buttonGroup1.add(jRadioButton1);
         buttonGroup1.add(jRadioButton2);
@@ -1076,26 +1081,23 @@ public class JFrames extends javax.swing.JFrame {
         if (game.fight.isEndRound()) {
             return;
         }
-        GuiUpdate guiUpdate = game.fight.Hit(human, enemy, 1, game.action, items, game.getResults());
-        updateGui(guiUpdate);
-
+        game.fight.hitPlayer(human, enemy, 1, game.action, items, game.getResults());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         if (game.fight.isEndRound()) {
             return;
         }
-        GuiUpdate guiUpdate = game.fight.Hit(human, enemy, 0, game.action, items, game.getResults());
-        updateGui(guiUpdate);
+        game.fight.hitPlayer(human, enemy, 0, game.action, items, game.getResults());
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         game.fight.setEndRound(false);
-        GuiUpdate guiUpdate = new GuiUpdate();
-        enemy = game.fight.NewRound(human, game.action, guiUpdate);
+        enemy = game.fight.newRound(human, game.action);
 
-        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
-        updateGui(guiUpdate);
+        mediator.updateInventory(items);
+        mediator.updateEnemy(enemy);
+        mediator.updatePlayer(human);
 
         jDialog1.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -1105,7 +1107,7 @@ public class JFrames extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         try {
-            game.EndGameTop(human, jTextField1, jTable1);
+            game.endGameTop(human, jTextField1, jTable1);
         } catch (IOException ex) {
             Logger.getLogger(JFrames.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1133,21 +1135,19 @@ public class JFrames extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        if (jRadioButton1.isSelected()) {
-            nameButton = "jRadioButton1";
+        int itemId = -1;
+         if (jRadioButton1.isSelected()) {
+            itemId = 0;
         }
         if (jRadioButton2.isSelected()) {
-            nameButton = "jRadioButton2";
+            itemId = 1;
         }
         if (jRadioButton3.isSelected()) {
-            nameButton = "jRadioButton3";
+            itemId = 2;
         }
-        GuiUpdate guiUpdate = new GuiUpdate();
-        game.action.UseItem(human, items, nameButton, guiUpdate);
-        guiUpdate.setPr1Value(human.getHealth());
-        jLabel12.setText(human.getHealth() + "/" + human.getMaxHealth());
-        game.change.BagText(items, guiUpdate);
-        updateGui(guiUpdate);
+        game.action.useItem(human, items, itemId);
+        mediator.updatePlayer(human);
+        mediator.updateInventory(items);
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -1163,32 +1163,27 @@ public class JFrames extends javax.swing.JFrame {
         if (game.fight.isEndRound()) {
             return;
         }
-        GuiUpdate guiUpdate = game.fight.Hit(human, enemy, 2, game.action, items, game.getResults());
-        updateGui(guiUpdate);
+        game.fight.hitPlayer(human, enemy, 2, game.action, items, game.getResults());
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         game.fight.setEndRound(false);
         human.setMaxHealth((int) (Math.random() * 10 + 5));
         jDialog7.dispose();
-        GuiUpdate guiUpdate = new GuiUpdate();
-        enemy = game.fight.NewRound(human, game.action, guiUpdate);
-
-        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
-        updateGui(guiUpdate);
-
+        enemy = game.fight.newRound(human, game.action);
+        mediator.updateInventory(items);
+        mediator.updateEnemy(enemy);
+        mediator.updatePlayer(human);
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         game.fight.setEndRound(false);
         human.setDamage((int) (Math.random() * 5 + 5));
         jDialog7.dispose();
-        GuiUpdate guiUpdate = new GuiUpdate();
-        enemy = game.fight.NewRound(human, game.action, guiUpdate);
-
-        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
-        updateGui(guiUpdate);
-
+        enemy = game.fight.newRound(human, game.action);
+        mediator.updateInventory(items);
+        mediator.updateEnemy(enemy);
+        mediator.updatePlayer(human);
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
@@ -1199,140 +1194,15 @@ public class JFrames extends javax.swing.JFrame {
 
         jFrame1.setVisible(rootPaneCheckingEnabled);
         jFrame1.setSize(1000, 700);
-        GuiUpdate guiUpdate = new GuiUpdate();
-        human = game.NewHuman(guiUpdate);
+        human = game.newHuman();
 
-        enemy = game.NewEnemy(locations, guiUpdate);
+        enemy = game.newEnemy(locations);
 
-        game.change.NewRoundTexts(human, enemy, guiUpdate, items, game.fight.i);
-        updateGui(guiUpdate);
+        mediator.updateInventory(items);
+        jDialog8.dispose();
     }//GEN-LAST:event_jButton15ActionPerformed
 
-    private void updateGui(GuiUpdate update) {
-        if (update.getLabel18Text() != null) {
-            jLabel18.setText(update.getLabel18Text());
-        }
-        if (update.getLabel2Text() != null) {
-            jLabel2.setText(update.getLabel2Text());
-        }
-        if (update.getDialogMessage() != null) {
-            jDialog1.setTitle(update.getDialogMessage());
-        }
-        if (update.getLabel3Text() != null) {
-            jLabel3.setText(update.getLabel3Text());
-        }
-        if (update.getLabel4Text() != null) {
-            jLabel4.setText(update.getLabel4Text());
-        }
-        if (update.getLabel5Text() != null) {
-            jLabel5.setText(update.getLabel5Text());
-        }
-        if (update.getLabel6Text() != null) {
-            jLabel6.setText(update.getLabel6Text());
-        }
-        if (update.getLabel26Text() != null) {
-            jLabel26.setText(update.getLabel26Text());
-        }
-        if (update.getFightEventOutput() != null) {
-            jLabel27.setText(update.getFightEventOutput());
-        }
-        if (update.getLabel29Text() != null) {
-            jLabel29.setText(update.getLabel29Text());
-        }
-        if (update.getLabel9Text() != null) {
-            jLabel9.setText(update.getLabel9Text());
-        }
-        if (update.getLabel10Text() != null) {
-            jLabel10.setText(update.getLabel10Text());
-        }
-        if (update.getLabel12Text() != null) {
-            jLabel12.setText(update.getLabel12Text());
-        }
-        if (update.getLabel13Text() != null) {
-            jLabel13.setText(update.getLabel13Text());
-        }
-        if (update.getLabel16Text() != null) {
-            jLabel16.setText(update.getLabel16Text());
-        }
-        if (update.getLabel17Text() != null) {
-            jLabel17.setText(update.getLabel17Text());
-        }
-        if (update.getLabel19Text() != null) {
-            jLabel19.setText(update.getLabel19Text());
-        }
-        if (update.getLabel24Text() != null) {
-            jLabel24.setText(update.getLabel24Text());
-        }
-        if (update.getRb1() != null) {
-            jRadioButton1.setText(update.getRb1());
-        }
-        if (update.getRb2() != null) {
-            jRadioButton2.setText(update.getRb2());
-        }
-        if (update.getRb3() != null) {
-            jRadioButton3.setText(update.getRb3());
-        }
-
-        if (update.getPr1Value() != null) {
-            jProgressBar1.setValue(update.getPr1Value());
-        } 
-
-        if (update.getPr2Value() != null) {
-            jProgressBar2.setValue(update.getPr2Value());
-        } 
-
-        jDialog1.setVisible(update.isShowDialog());
-
-        jDialog2.setVisible(update.isShowDialog1());
-
-        jDialog3.setVisible(update.isShowDialog2());
-
-        jDialog7.setVisible(update.isShowDialog7());
-
-        if (update.isDisposeDialog1()) {
-            jDialog1.dispose();
-        }
-
-        if (update.isDisposeFrame()) {
-            jFrame1.dispose();
-        }
-
-        if (update.getDialogBounds() != null) {
-            jDialog1.setBounds(update.getDialogBounds());
-        }
-        if (update.getDialog1Bounds() != null) {
-            jDialog2.setBounds(update.getDialog1Bounds());
-        }
-        if (update.getDialog2Bounds() != null) {
-            jDialog3.setBounds(update.getDialog2Bounds());
-        }
-
-        if (update.getDamageLabel() != null) {
-            jLabel10.setText(update.getDamageLabel());
-        }
-
-        if (update.getIconPath() != null) {
-            jLabel4.setIcon(new ImageIcon(update.getIconPath()));
-        }
-
-        if (update.getHumanMaxHealth() != null) {
-            jProgressBar1.setMaximum(update.getHumanMaxHealth());
-        } 
-
-        if (update.getEnemyMaxHealth() != null) {
-            jProgressBar2.setMaximum(update.getEnemyMaxHealth());
-        } 
-
-        if (update.getHumanHealth() != null) {
-            jProgressBar1.setValue(update.getHumanHealth());
-        } 
-
-        if (update.getEnemyHealth() != null) {
-            jProgressBar2.setValue(update.getEnemyHealth());
-        } 
-    }
-
-
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;

@@ -6,7 +6,7 @@ package mortalkombatbversion;
 
 /**
  *
- * @author 
+ * @author Kate Shcherbinina
  */
 public class Debuf {
     

@@ -5,97 +5,59 @@
 package mortalkombatbversion;
 
 /**
- *
- * @author
+ * Класс Player представляет игрока в игре.
+ * Игрок имеет уровень, здоровье, урон, очки, опыт и следующую цель по опыту.
+ * 
+ * @author Kate Shcherbinina
+ * @since 1.0
  */
-public class Player {
+public class Player extends Fighter {
 
-    private int level;
-    private int health;
-    private int maxhealth;
-    private int damage;
-    private int attack;
-    private Debuf debuf;
-
-    public Player(int level, int health, int damage, int attack) {
-        this.level = level;
-        this.health = health;
-        this.damage = damage;
-        this.attack = attack;
-        this.maxhealth = health;
-    }
-
-    public void setLevel() {
-        this.level++;
-    }
-
-    public void setHealth(int h) {
-        this.health += h;
-    }
+    private int points;
+    private int experience;
+    private int nextexperience;
     
-    public void removeHealth(int damage){
-        if(debuf != null){
-            health -= damage * (1 + debuf.getDefenceWeaken());
-        } else{
-            health -= damage;
-        }
+    /**
+     * Конструктор для создания объекта игрока.
+     *
+     * @param level начальный уровень игрока
+     * @param health начальное здоровье игрока
+     * @param damage начальный урон игрока
+     */
+    public Player(int level, int health, int damage) {
+        super(level, health, damage, -1, "Kitana", "src/main/resources/Kitana.jpg");
+        this.points = 0;
+        this.experience = 0;
+        this.nextexperience = 40;
     }
 
-    public void setNewHealth(int h) {
-        this.health = h;
+    public int getPoints() {
+        return this.points;
     }
 
-    public void setDamage(int d) {
-        this.damage += d;
+    public int getExperience() {
+        return this.experience;
     }
 
-    public void setAttack(int a) {
-        this.attack = a;
+    public int getNextExperience() {
+        return this.nextexperience;
     }
 
-    public void setMaxHealth(int h) {
-        this.maxhealth += h;
+    public void setPoints(int p) {
+        this.points += p;
     }
 
-    public void setDebuf(Debuf debuf) {
-        this.debuf = debuf;
+    public void setExperience(int e) {
+        this.experience += e;
     }
 
-    public int getLevel() {
-        return this.level;
+    public void setNextExperience(int e) {
+        this.nextexperience = e;
     }
 
-    public int getHealth() {
-        return this.health;
-    }
-
-    public int getDamage() {
-        if(debuf != null){
-            return (int) (this.damage * (1 - debuf.getAttackWeaken()));
-        }
-        return this.damage;
-    }
-
-    public int getAttack() {
-        return this.attack;
-    }
-
-    public int getMaxHealth() {
-        return this.maxhealth;
-    }
-
+    @Override
     public String getName() {
-        return "";
-    }
-    
-    public void nextTurn(){
-        if(debuf == null){
-            return;
-        }
-        debuf.nextTurn();
-        if(debuf.getTurns() <= 0){
-            debuf = null;
-        }
+        return "You";
     }
 
 }

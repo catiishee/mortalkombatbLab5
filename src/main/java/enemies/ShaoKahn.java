@@ -4,20 +4,23 @@
  */
 package enemies;
 
-import mortalkombatbversion.Player;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
-public class ShaoKahn extends Player {
+public class ShaoKahn extends Enemy {
 
     public ShaoKahn(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack);
-    }
-
-    @Override
-    public String getName() {
-        return "Shao Kahn";
+        super(level, health, damage, attack, "Shao Kahn", "src/main/resources/Босс.jpg");
+        List<EnemyBehavior> enemyBehavior = new ArrayList<>();
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 10));
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 40));
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 1, 1}, 40));
+        enemyBehavior.add(new EnemyBehavior(new int[]{3}, 10));
+        setEnemyBehaviors(enemyBehavior);
+        setRewardsProbability(new int[]{38, 23, 8});
     }
 }

@@ -4,20 +4,22 @@
  */
 package enemies;
 
-import mortalkombatbversion.Player;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
-public class SonyaBlade extends Player {
+public class SonyaBlade extends Enemy {
 
     public SonyaBlade(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack);
+        super(level, health, damage, attack, "Sonya Blade", "src/main/resources/маг.jpg");
+        List<EnemyBehavior> enemyBehavior = new ArrayList<>();
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 25));
+        enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 25));
+        enemyBehavior.add(new EnemyBehavior(new int[]{0, 1, 0}, 50));
+        setEnemyBehaviors(enemyBehavior);
     }
 
-    @Override
-    public String getName() {
-        return "Sonya Blade";
-    }
 }

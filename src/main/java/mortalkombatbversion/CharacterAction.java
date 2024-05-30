@@ -4,34 +4,74 @@
  */
 package mortalkombatbversion;
 
-import enemies.Baraka;
-import enemies.ShaoKahn;
-import enemies.SubZero;
-import enemies.LiuKang;
-import enemies.SonyaBlade;
+import enemies.Enemy;
 import enemies.enemiesFabrics.EnemyFabric;
-import java.awt.Rectangle;
-import mavenproject5.GuiUpdate;
+import java.util.Random;
+import mavenproject5.Mediator;
 
 /**
- *
- * @author
+ * Класс CharacterAction отвечает за управление действиями персонажа,
+ * противников и логикой игрового процесса.
+ * Он обеспечивает взаимодействие между игроком и врагами,
+ * а также обновляет состояние игры.
+ * 
+ * @author Kate Shcherbinina
+ * @since 1.0
  */
 public class CharacterAction {
-
+    
+    // Массив значений опыта, необходимых для достижения следующего уровня
     private final int experience_for_next_level[] = {40, 90, 180, 260, 410, 1000};
-    private final int kind_fight[][] = {{1, 0}, {1, 1, 0}, {0, 1, 0}, {1, 1, 1, 1}, {2}, {3}};
-    private Player enemyes[] = new Player[6];
+    
+    // Массив врагов в игре
+    private Enemy enemyes[] = new Enemy[6];
+    
+    // Фабрика врагов для создания врагов
     EnemyFabric fabric = new EnemyFabric();
-    private Player enemyy = null;
+    
+    // Текущий враг в игре
+    private Enemy enemy = null;
+    
+    // Количество локаций, которые должен пройти игрок
     private int numberOfLocations;
+    
+    // Количество врагов в текущей локации
     private int numberOfEnemyesInLocation = -1;
+    
+    // Текущий враг в локации
     private int currentEnemy = 0;
+    
+    // Текущая локация
     private int currentLocation;
-
-    public void setEnemyes(int numberOfLocations) {
+    
+    // Объект Mediator для связи между компонентами интерфейса пользователя
+    private Mediator mediator;
+    
+     /**
+     * Конструктор класса CharacterAction.
+     * Инициализирует объект и задает начальный список врагов.
+     *
+     * @param mediator объект класса Mediator
+     */
+    public CharacterAction(Mediator mediator) {
+        setEnemyes();
+        this.mediator = mediator;
+    }
+    
+    /**
+     * Устанавливает количество локаций, которые должен пройти игрок.
+     *
+     * @param numberOfLocations количество локаций
+     */
+public void setNumberOfLocations(int numberOfLocations) {
         this.numberOfLocations = numberOfLocations;
         this.currentLocation = 1;
+    }
+    
+    /**
+     * Инициализирует массив врагов с использованием фабрики врагов.
+     */
+    private void setEnemyes() {
         enemyes[0] = fabric.create(0, 0);
         enemyes[1] = fabric.create(1, 0);
         enemyes[2] = fabric.create(2, 0);
@@ -39,56 +79,53 @@ public class CharacterAction {
         enemyes[4] = fabric.create(4, 0);
         enemyes[5] = fabric.create(4, 0);
     }
-
-    public Player[] getEnemyes() {
+    
+    /**
+     * Возвращает массив врагов.
+     *
+     * @return массив врагов
+     */
+    public Fighter[] getEnemyes() {
         return this.enemyes;
     }
-
-    public Player ChooseEnemy(int level, GuiUpdate guiUpdate) {
+    
+    /**
+     * Выбирает врага на основе текущего уровня и состояния локации.
+     * Если все враги побеждены, начинается новая локация.
+     * Если текущий враг является последним в локации, выбирается босс.
+     *
+     * @param level текущий уровень игрока
+     * @return объект врага
+     */
+    public Enemy chooseEnemy(int level) {
         if (currentEnemy > numberOfEnemyesInLocation) {
             startNewLocation(level);
         }
         if (currentEnemy == numberOfEnemyesInLocation) {
-            return ChooseBoss(level, guiUpdate);
+            return chooseBoss();
         }
         int i = (int) (Math.random() * 4);
-        switch (i) {
-            case 0:
-                enemyy = enemyes[0];
-                guiUpdate.setLabel5Text("Baraka (танк)");
-                guiUpdate.setIconPath("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Танк.jpg");
-                break;
-            case 1:
-                enemyy = enemyes[1];
-                guiUpdate.setLabel5Text("Sub-Zero (маг)");
-                guiUpdate.setIconPath("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\маг.jpg");
-                break;
-            case 2:
-                enemyy = enemyes[2];
-                guiUpdate.setLabel5Text("Liu Kang (боец)");
-                guiUpdate.setIconPath("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Боец.jpg");
-                break;
-            case 3:
-                enemyy = enemyes[3];
-                guiUpdate.setLabel5Text("Sonya Blade (солдат)");
-                guiUpdate.setIconPath("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Солдат.jpg");
-                break;
-        }
-        guiUpdate.setLabel10Text(Integer.toString(enemyy.getDamage()));
-        guiUpdate.setLabel13Text(Integer.toString(enemyy.getHealth()) + "/" + Integer.toString(enemyy.getMaxHealth()));
-        return enemyy;
+        enemy = enemyes[i];
+        return enemy;
     }
-
-    private Player ChooseBoss(int level, GuiUpdate guiUpdate) {
-        enemyy = enemyes[4];
-        guiUpdate.setLabel5Text("Shao Kahn (босс)");
-        guiUpdate.setIconPath("C:\\Users\\user\\OneDrive\\Документы\\NetBeansProjects\\mavenproject5\\src\\main\\java\\resources\\Босс.jpg");
-        guiUpdate.setLabel10Text(Integer.toString(enemyy.getDamage()));
-        guiUpdate.setLabel13Text(Integer.toString(enemyy.getHealth()) + "/" + Integer.toString(enemyy.getMaxHealth()));
-        return enemyy;
+    
+    /**
+     * Возвращает босса для текущей локации.
+     *
+     * @return объект босса
+     */
+    private Enemy chooseBoss() {
+        enemy = enemyes[4];
+        return enemy;
     }
-
-    public void AddPoints(Human human, GuiUpdate guiUpdate) {
+    
+    /**
+     * Добавляет очки и опыт игроку в зависимости от его уровня
+     * после победы над врагом.
+     *
+     * @param human объект игрока
+     */
+    public void addPoints(Player human) {
         switch (human.getLevel()) {
             case 0:
                 human.setExperience(20);
@@ -112,119 +149,104 @@ public class CharacterAction {
                 break;
         }
 
-        boolean levelUp = false;
-
-        for (int i = 0; i < 5; i++) {
-            if (experience_for_next_level[i] == human.getExperience()) {
-                human.setLevel();
-                human.setNextExperience(experience_for_next_level[i + 1]);
-                guiUpdate.setShowDialog7(true);
-                levelUp = true;
-                NewHealthHuman(human);
-                for (int j = 0; j < 4; j++) {
-                    NewHealthEnemy(enemyes[j], human);
-                }
-            }
-        }
-        if (!levelUp) {
-            guiUpdate.setShowDialog(true);
-            guiUpdate.setDialogBounds(new Rectangle(300, 150, 700, 600));
-        }
+        checkLevelUp(human);
     }
-
-    public void AddPointsBoss(Human human, GuiUpdate guiUpdate) {
+    
+    /**
+     * Добавляет очки и опыт игроку за победу над боссом.
+     *
+     * @param human объект игрока
+     */
+    public void addPointsBoss(Player human) {
 
         human.setExperience(50);
         human.setPoints(65 + human.getHealth() / 2);
 
+        checkLevelUp(human);
+    }
+    
+    /**
+     * Проверяет, достиг ли игрок следующего уровня,
+     * и если да, повышает уровень, обновляет характеристики
+     * и показывает диалог об уровне.
+     *
+     * @param human объект игрока
+     */
+    private void checkLevelUp(Player human) {
         boolean levelUp = false;
 
-        for (int i = 0; i < 5; i++) {
-            if (experience_for_next_level[i] == human.getExperience()) {
+        for (int i = 5; i >= human.getLevel(); i--) {
+            if (experience_for_next_level[i] <= human.getExperience()) {
                 human.setLevel();
                 human.setNextExperience(experience_for_next_level[i + 1]);
-                guiUpdate.setShowDialog7(true);
+                mediator.showLevelUp();
                 levelUp = true;
-                NewHealthHuman(human);
+                newHealthHuman(human);
                 for (int j = 0; j < 4; j++) {
-                    NewHealthEnemy(enemyes[j], human);
+                    newHealthEnemy(enemyes[j], human);
                 }
+                break;
             }
         }
         if (!levelUp) {
-            guiUpdate.setShowDialog(true);
-            guiUpdate.setDialogBounds(new Rectangle(300, 150, 700, 600));
+            mediator.showEndRound("You win");
         }
-    }
 
-    public void AddItems(int k1, int k2, int k3, Items[] items) {
-        double i = Math.random();
-        if (i < k1 * 0.01) {
-            items[0].setCount(1);
-        }
-        if (i >= k1 * 0.01 && i < (k1 + k2) * 0.01) {
-            items[1].setCount(1);
-        }
-        if (i >= (k1 + k2) * 0.01 && i < (k1 + k2 + k3) * 0.01) {
-            items[2].setCount(1);
-        }
     }
-
-    public int[] ChooseBehavior(Player enemy) {
-        int arr[] = null;
-        double i = Math.random();
-        if (enemy instanceof Baraka) {
-            arr = EnemyBehavior(15, 15, 60, 10, 0, 0, i);
+    
+    /**
+     * Добавляет предметы игроку с вероятностью выпадения,
+     * основанной на характеристиках врага.
+     *
+     * @param enemy объект врага
+     * @param items массив предметов
+     */
+    public void addItems(Enemy enemy, Items[] items) {
+        Random random = new Random();
+        for (int i = 0; i < enemy.getRewardsProbability().length; i++) {
+            int chance = random.nextInt(100);
+            if (chance < enemy.getRewardsProbability()[i]) {
+                items[i].setCount(1);
+                return;
+            }
         }
-        if (enemy instanceof SubZero) {
-            arr = EnemyBehavior(20, 20, 0, 50, 10, 0, i);
-        }
-        if (enemy instanceof LiuKang) {
-            arr = EnemyBehavior(13, 13, 10, 64, 0, 0, i);
-        }
-        if (enemy instanceof SonyaBlade) {
-            arr = EnemyBehavior(25, 25, 50, 0, 0, 0, i);
-        }
-        if (enemy instanceof ShaoKahn) {
-            arr = EnemyBehavior(10, 40, 0, 40, 0, 10, i);
-        }
-        return arr;
+        mediator.updateInventory(items);
     }
-
-    private int[] EnemyBehavior(int k1, int k2, int k3, int k4, int k5, int k6, double i) {
-        if (i < k1 * 0.01) {
-            return kind_fight[0];
-        }
-        if (i >= k1 * 0.01 && i < (k1 + k2) * 0.01) {
-            return kind_fight[1];
-        }
-        if (i >= (k1 + k2) * 0.01 && i < (k1 + k2 + k3) * 0.01) {
-            return kind_fight[2];
-        }
-        if (i >= (k1 + k2 + k3) * 0.01 && i < (k1 + k2 + k3 + k4) * 0.01) {
-            return kind_fight[3];
-        }
-        if (i >= (k1 + k2 + k3 + k4) * 0.01 && i < (k1 + k2 + k3 + k4 + k5) * 0.01) {
-            return kind_fight[4];
-        }
-        return kind_fight[5];
-    }
-
+    
+    /**
+     * Инициализирует новую локацию, задавая количество врагов
+     * в зависимости от уровня игрока.
+     *
+     * @param playerLevel текущий уровень игрока
+     */
     public void startNewLocation(int playerLevel) {
         currentLocation++;
         numberOfEnemyesInLocation = (int) (playerLevel + 1 + Math.random() * 2);
         currentEnemy = 0;
     }
-
+    
+    /**
+     * Проверяет, является ли текущий раунд финальным.
+     *
+     * @return true, если текущий раунд финальный, иначе false
+     */
     public boolean isFinalRound() {
         return currentLocation >= numberOfLocations && currentEnemy >= numberOfEnemyesInLocation;
     }
-
+    
+    /**
+     * Переходит к следующему врагу.
+     */
     public void nextEnemy() {
         currentEnemy++;
     }
-
-    private void NewHealthHuman(Human human) {
+    
+    /**
+     * Обновляет здоровье и урон игрока при повышении уровня.
+     *
+     * @param human объект игрока
+     */
+    private void newHealthHuman(Player human) {
         int hp = 0;
         int damage = 0;
         switch (human.getLevel()) {
@@ -248,8 +270,14 @@ public class CharacterAction {
         human.setMaxHealth(hp);
         human.setDamage(damage);
     }
-
-    private void NewHealthEnemy(Player enemy, Human human) {
+    
+    /**
+     * Обновляет здоровье и урон врагов в зависимости от уровня игрока.
+     *
+     * @param enemy объект врага
+     * @param human объект игрока
+     */
+    private void newHealthEnemy(Fighter enemy, Player human) {
         int hp = 0;
         int damage = 0;
         switch (human.getLevel()) {
@@ -274,35 +302,35 @@ public class CharacterAction {
         enemy.setDamage((int) enemy.getDamage() * damage / 100);
         enemy.setLevel();
     }
-
-    public void UseItem(Player human, Items[] items, String name, GuiUpdate guiUpdate) {
-        switch (name) {
-            case "jRadioButton1":
-                if (items[0].getCount() > 0) {
+    
+    /**
+     * Использует предмет из инвентаря игрока. Если предмет не может быть использован,
+     * показывает сообщение об ошибке.
+     *
+     * @param human объект игрока
+     * @param items массив предметов
+     * @param id    идентификатор предмета
+     */
+    public void useItem(Fighter human, Items[] items, int id) {
+        if (id != 2 && items[id].getCount() > 0) {
+            switch (id) {
+                case 0:
                     human.setHealth((int) (human.getMaxHealth() * 0.25));
                     items[0].setCount(items[0].getCount() - 1);
-                } else {
-                    guiUpdate.setShowDialog(true);
-                    guiUpdate.setDialogBounds(new Rectangle(300, 200, 400, 300));
-                }
-                break;
-            case "jRadioButton2":
-                if (items[1].getCount() > 0) {
+
+                    break;
+                case 1:
                     human.setHealth((int) (human.getMaxHealth() * 0.5));
                     items[1].setCount(items[1].getCount() - 1);
-                } else {
-                    guiUpdate.setShowDialog(true);
-                    guiUpdate.setDialogBounds(new Rectangle(300, 200, 400, 300));
-                }
-                break;
-            case "jRadioButton3":
-                guiUpdate.setShowDialog(true);
-                guiUpdate.setDialogBounds(new Rectangle(300, 200, 400, 300));
-                break;
-        }
 
-        if (!guiUpdate.isShowDialog()) {
-            guiUpdate.setDisposeDialog1(true);
+                    break;
+            }
+
+            mediator.closeInventory();
+            mediator.updateInventory(items);
+
+        } else {
+            mediator.showCanNotUseItem();
         }
     }
 }

@@ -4,11 +4,11 @@
  */
 package actions;
 
-import mortalkombatbversion.Player;
+import mortalkombatbversion.Fighter;
 
 /**
  *
- * @author user
+ * @author Kate Shcherbinina
  */
 class EventDefenceDefence implements FightEvent {
     
@@ -19,7 +19,7 @@ class EventDefenceDefence implements FightEvent {
     }
 
     @Override
-    public String executeEvent(Player player1, Player player2) {
+    public String executeEvent(Fighter player1, Fighter player2) {
         if (Math.random() <= 0.5) {
             stun = true;
         }

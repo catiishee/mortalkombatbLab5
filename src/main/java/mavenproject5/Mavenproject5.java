@@ -5,7 +5,7 @@ package mavenproject5;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
 public class Mavenproject5 {
 

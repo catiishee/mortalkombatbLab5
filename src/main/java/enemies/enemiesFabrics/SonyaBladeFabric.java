@@ -4,20 +4,18 @@
  */
 package enemies.enemiesFabrics;
 
-import mortalkombatbversion.Player;
+import enemies.Enemy;
 import enemies.SonyaBlade;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
 public class SonyaBladeFabric implements EnemyFabricInterface {
 
     @Override
-    public Player create(int i) {
-        Player enemy;
-        enemy = new SonyaBlade(1, 80, 16, 1);
-        return enemy;
+    public Enemy create(int i) { 
+        return new SonyaBlade(1, 80, 16, 1);
     }
 
 }

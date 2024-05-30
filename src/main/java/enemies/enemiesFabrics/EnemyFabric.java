@@ -4,15 +4,26 @@
  */
 package enemies.enemiesFabrics;
 
-import mortalkombatbversion.Player;
+import enemies.Enemy;
 
 /**
- *
- * @author
+ * Класс EnemyFabric отвечает за создание объектов врагов.
+ * Он использует фабрики для создания различных типов врагов
+ * в зависимости от переданных параметров.
+ * 
+ * @author Kate Shcherbinina
+ * @since 1.0
  */
 public class EnemyFabric {
-
-    public Player create(int i, int j) {
+    
+    /**
+     * Создает врага заданного типа.
+     * 
+     * @param i тип врага (0 - Baraka, 1 - SubZero, 2 - LiuKang, 3 - SonyaBlade, 4 - ShaoKahn)
+     * @param j уровень врага
+     * @return объект врага
+     */
+    public Enemy create(int i, int j) {
         EnemyFabricInterface fabric = null;
 
         switch (i) {
@@ -32,7 +43,7 @@ public class EnemyFabric {
                 fabric = new ShaoKahnFabric();
                 break;
         }
-        Player enemy = fabric.create(j);
+        Enemy enemy = fabric.create(j);
         return enemy;
     }
 }

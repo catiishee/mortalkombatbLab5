@@ -5,16 +5,16 @@
 package actions;
 
 import mortalkombatbversion.Debuf;
-import mortalkombatbversion.Player;
+import mortalkombatbversion.Fighter;
 
 /**
  *
- * @author user
+ * @author Kate Shcherbinina
  */
 class EventWeakenDefence implements FightEvent {
     
     @Override
-    public String executeEvent(Player player1, Player player2) {
+    public String executeEvent(Fighter player1, Fighter player2) {
         if (Math.random() < 0.75) {
             player2.setDebuf(new Debuf(player1.getLevel()));
             return player1.getName() + " weakened " + player2.getName();

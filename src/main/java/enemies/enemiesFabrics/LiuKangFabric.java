@@ -4,19 +4,17 @@
  */
 package enemies.enemiesFabrics;
 
+import enemies.Enemy;
 import enemies.LiuKang;
-import mortalkombatbversion.Player;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
 public class LiuKangFabric implements EnemyFabricInterface {
 
     @Override
-    public Player create(int i) {
-        Player enemy;
-        enemy = new LiuKang(1, 70, 20, 1);
-        return enemy;
+    public Enemy create(int i) {
+        return new LiuKang(1, 70, 20, 1);
     }
 }

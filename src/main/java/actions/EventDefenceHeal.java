@@ -4,16 +4,16 @@
  */
 package actions;
 
-import mortalkombatbversion.Player;
+import mortalkombatbversion.Fighter;
 
 /**
  *
- * @author user
+ * @author Kate Shcherbinina
  */
 class EventDefenceHeal implements FightEvent {
     
     @Override
-    public String executeEvent(Player player1, Player player2) {
+    public String executeEvent(Fighter player1, Fighter player2) {
         player2.setHealth((int) ((player2.getMaxHealth() - player2.getHealth()) * 0.5));
         return player2.getName() + " healed";
     }

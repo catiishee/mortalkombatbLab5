@@ -4,7 +4,7 @@
  */
 package mortalkombatbversion;
 
-import mavenproject5.ChangeTexts;
+import enemies.Enemy;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,46 +15,82 @@ import java.util.Comparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import mavenproject5.GuiUpdate;
+import mavenproject5.Mediator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- *
- * @author
+ * Класс Game управляет игровой логикой, включая создание игроков и врагов, ведение боя, 
+ * обновление таблицы результатов и работу с файлом результатов в формате Excel.
+ * 
+ * @author Kate Shcherbinina
+ * @since 1.0
  */
 public class Game {
 
     String filePath = "src/main/results.xlsx";
-    public CharacterAction action = new CharacterAction();
-    public ChangeTexts change = new ChangeTexts();
-    public Fight fight = new Fight();
+    public CharacterAction action;
+    public Fight fight;
     private ArrayList<Result> results = new ArrayList<>();
+    private Mediator mediator;
 
-    public Player NewEnemy( int numberOfLocations, GuiUpdate guiUpdate) {
-        action.setEnemyes(numberOfLocations);
-        Player enemy = action.ChooseEnemy(0, guiUpdate);
-        guiUpdate.setEnemyMaxHealth(enemy.getMaxHealth());
-        guiUpdate.setPr2Value(enemy.getHealth());
+    /**
+     * Конструктор класса Game. Инициализирует медиатор, действия персонажа и бой.
+     * 
+     * @param mediator медиатор для управления обновлениями интерфейса
+     */
+    public Game(Mediator mediator) {
+        this.mediator = mediator;
+        this.action = new CharacterAction(mediator);
+        this.fight = new Fight(mediator);
+    }
+
+    /**
+     * Создает нового врага для игрока на основе количества локаций.
+     * 
+     * @param numberOfLocations количество локаций
+     * @return новый объект врага
+     */
+    public Enemy newEnemy( int numberOfLocations) {
+        action.setNumberOfLocations(numberOfLocations);
+        Enemy enemy = action.chooseEnemy(0);
+        mediator.updateEnemy(enemy);
         return enemy;
     }
-
-    public Human NewHuman(GuiUpdate guiUpdate) {
-        Human human = new Human(0, 80, 160, 1);
-        guiUpdate.setHumanMaxHealth(human.getMaxHealth());
-        guiUpdate.setPr1Value(human.getHealth());
+    
+    /**
+     * Создает нового игрока (человека) с начальными параметрами здоровья и урона.
+     * 
+     * @return новый объект игрока
+     */
+    public Player newHuman() {
+        Player human = new Player(0, 80, 160);
+        mediator.updatePlayer(human);
         return human;
     }
-
-    public void EndGameTop(Human human, JTextField text, JTable table) throws IOException {
+    
+    /**
+     * Завершает игру и добавляет результат игрока в таблицу рекордов.
+     * 
+     * @param human объект игрока
+     * @param text текстовое поле для ввода имени игрока
+     * @param table таблица для отображения результатов
+     * @throws IOException если возникает ошибка при записи в файл
+     */
+    public void endGameTop(Player human, JTextField text, JTable table) throws IOException {
         results.add(new Result(text.getText(), human.getPoints()));
         results.sort(Comparator.comparing(Result::getPoints).reversed());
-        WriteToTable(table);
-        WriteToExcel();
+        writeToTable(table);
+        writeToExcel();
     }
-
-    public void WriteToExcel() throws IOException {
+    
+    /**
+     * Записывает текущие результаты в файл Excel.
+     * 
+     * @throws IOException если возникает ошибка при записи в файл
+     */
+    public void writeToExcel() throws IOException {
         XSSFWorkbook book = new XSSFWorkbook();
         XSSFSheet sheet = book.createSheet("Результаты ТОП 10");
         XSSFRow r = sheet.createRow(0);
@@ -73,20 +109,35 @@ public class Game {
         book.write(new FileOutputStream(f));
         book.close();
     }
-
+    
+    /**
+     * Возвращает текущий список результатов.
+     * 
+     * @return список результатов
+     */
     public ArrayList<Result> getResults() {
         return this.results;
     }
-
-    public void ReadFromExcel() throws IOException {
+    
+    /**
+     * Читает результаты из файла Excel и добавляет их в список результатов.
+     * 
+     * @throws IOException если возникает ошибка при чтении из файла
+     */
+    public void readFromExcel() throws IOException {
         XSSFWorkbook book = new XSSFWorkbook(Files.newInputStream(Paths.get(filePath)));
         XSSFSheet sh = book.getSheetAt(0);
         for (int i = 1; i <= sh.getLastRowNum(); i++) {
             results.add(new Result(sh.getRow(i).getCell(1).getStringCellValue(), (int) sh.getRow(i).getCell(2).getNumericCellValue()));
         }
     }
-
-    public void WriteToTable(JTable table) {
+    
+    /**
+     * Обновляет таблицу отображения результатов.
+     * 
+     * @param table таблица для отображения результатов
+     */
+    public void writeToTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < results.size(); i++) {
             if (i < 10) {

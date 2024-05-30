@@ -4,13 +4,13 @@
  */
 package enemies.enemiesFabrics;
 
-import mortalkombatbversion.Player;
+import enemies.Enemy;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
 public interface EnemyFabricInterface {
 
-    public Player create(int i);
+    public Enemy create(int i);
 }

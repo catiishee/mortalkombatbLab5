@@ -5,18 +5,16 @@
 package enemies.enemiesFabrics;
 
 import enemies.Baraka;
-import mortalkombatbversion.Player;
+import enemies.Enemy;
 
 /**
  *
- * @author
+ * @author Kate Shcherbinina
  */
 public class BarakaFabric implements EnemyFabricInterface {
 
     @Override
-    public Player create(int i) {
-        Player enemy;
-        enemy = new Baraka(1, 100, 12, 1);
-        return enemy;
+    public Enemy create(int i) {
+        return new Baraka(1, 100, 12, 1);
     }
 }

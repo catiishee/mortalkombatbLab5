@@ -14,7 +14,7 @@ import java.util.List;
 public class SonyaBlade extends Enemy {
 
     public SonyaBlade(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack, "Sonya Blade", "src/main/resources/маг.jpg");
+        super(level, health, damage, attack, "Sonya Blade", "/images/маг.jpg");
         List<EnemyBehavior> enemyBehavior = new ArrayList<>();
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 25));
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 25));

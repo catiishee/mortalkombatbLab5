@@ -14,7 +14,7 @@ import java.util.List;
 public class Baraka extends Enemy {
 
     public Baraka(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack, "Baraka", "src/main/resources/Боец.jpg");
+        super(level, health, damage, attack, "Baraka", "/images/Боец.jpg");
         List<EnemyBehavior> enemyBehavior = new ArrayList<>();
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 15));
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 15));

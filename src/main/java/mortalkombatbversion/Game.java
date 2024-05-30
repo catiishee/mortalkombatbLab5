@@ -9,9 +9,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -125,10 +128,13 @@ public class Game {
      * @throws IOException если возникает ошибка при чтении из файла
      */
     public void readFromExcel() throws IOException {
-        XSSFWorkbook book = new XSSFWorkbook(Files.newInputStream(Paths.get(filePath)));
-        XSSFSheet sh = book.getSheetAt(0);
-        for (int i = 1; i <= sh.getLastRowNum(); i++) {
-            results.add(new Result(sh.getRow(i).getCell(1).getStringCellValue(), (int) sh.getRow(i).getCell(2).getNumericCellValue()));
+        try {
+            XSSFWorkbook book = new XSSFWorkbook(Files.newInputStream(Paths.get(filePath)));
+            XSSFSheet sh = book.getSheetAt(0);
+            for (int i = 1; i <= sh.getLastRowNum(); i++) {
+                results.add(new Result(sh.getRow(i).getCell(1).getStringCellValue(), (int) sh.getRow(i).getCell(2).getNumericCellValue()));
+            }
+        } catch (NoSuchFileException ex) {
         }
     }
     

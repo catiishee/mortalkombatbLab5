@@ -133,7 +133,7 @@ public class Mediator {
         jProgressBar1.setValue(player.getHealth());
         jProgressBar1.setMaximum(player.getMaxHealth());
         jLabel28.setText(player.getName());
-        ImageIcon imageIcon = new ImageIcon(player.getImage());
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource(player.getImage()));
         jLabel2.setIcon(imageIcon);
         jLabel9.setText(Integer.toString(player.getDamage()));
         jLabel12.setText(Integer.toString(player.getHealth()) + "/" + Integer.toString(player.getMaxHealth()));
@@ -151,7 +151,7 @@ public class Mediator {
         jProgressBar2.setValue(enemy.getHealth());
         jProgressBar2.setMaximum(enemy.getMaxHealth());
         jLabel5.setText(enemy.getName());
-        ImageIcon imageIcon = new ImageIcon(enemy.getImage());
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource(enemy.getImage()));
         jLabel4.setIcon(imageIcon);
         jLabel10.setText(Integer.toString(enemy.getDamage()));
         jLabel13.setText(Integer.toString(enemy.getHealth()) + "/" + Integer.toString(enemy.getMaxHealth()));

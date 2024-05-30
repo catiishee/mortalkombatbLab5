@@ -24,6 +24,22 @@
         <exec.mainClass>mavenproject5.Mavenproject5</exec.mainClass>
     </properties>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.png</include>
+                    <include>**/*.jpg</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/images</directory>
+                <includes>
+                    <include>**/*.png</include>
+                    <include>**/*.jpg</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -61,7 +77,6 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
+        </plugins>      
     </build>
-
 </project>

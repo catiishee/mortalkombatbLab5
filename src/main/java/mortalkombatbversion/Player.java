@@ -25,7 +25,7 @@ public class Player extends Fighter {
      * @param damage начальный урон игрока
      */
     public Player(int level, int health, int damage) {
-        super(level, health, damage, -1, "Kitana", "src/main/resources/Kitana.jpg");
+        super(level, health, damage, -1, "Kitana", "/images/Kitana.jpg");
         this.points = 0;
         this.experience = 0;
         this.nextexperience = 40;

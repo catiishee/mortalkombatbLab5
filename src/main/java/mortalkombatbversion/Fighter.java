@@ -4,6 +4,8 @@
  */
 package mortalkombatbversion;
 
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author Kate Shcherbinina
@@ -125,5 +127,6 @@ public class Fighter {
             debuf = null;
         }
     }
-
+    
+    
 }

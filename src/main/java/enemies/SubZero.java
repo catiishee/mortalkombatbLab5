@@ -14,7 +14,7 @@ import java.util.List;
 public class SubZero extends Enemy {
 
     public SubZero(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack, "Sub-Zero", "src/main/resources/Солдат.jpg");
+        super(level, health, damage, attack, "Sub-Zero", "/images/Солдат.jpg");
         List<EnemyBehavior> enemyBehavior = new ArrayList<>();
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 20));
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 20));

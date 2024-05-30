@@ -14,7 +14,7 @@ import java.util.List;
 public class ShaoKahn extends Enemy {
 
     public ShaoKahn(int level, int health, int damage, int attack) {
-        super(level, health, damage, attack, "Shao Kahn", "src/main/resources/Босс.jpg");
+        super(level, health, damage, attack, "Shao Kahn", "/images/Босс.jpg");
         List<EnemyBehavior> enemyBehavior = new ArrayList<>();
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 0}, 10));
         enemyBehavior.add(new EnemyBehavior(new int[]{1, 1, 0}, 40));
